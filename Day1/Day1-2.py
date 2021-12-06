@@ -1,4 +1,4 @@
-# Day1-2.py
+# Day1-2.py - Sonar Sweep (part 2)
 
 # read through the input file, working out a sliding window and
 # counting how many times the window increases

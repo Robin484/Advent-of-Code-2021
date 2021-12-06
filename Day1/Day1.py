@@ -1,4 +1,4 @@
-# Day1.py
+# Day1.py - Sonar Sweep
 
 # read through the input file, counting how many times line increases
 
