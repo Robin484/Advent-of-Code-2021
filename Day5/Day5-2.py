@@ -1,4 +1,4 @@
-# Day5.py - Hydrothermal Venture
+# Day5-2.py - Hydrothermal Venture (part 2)
 
 import re
 import numpy as np
@@ -41,6 +41,21 @@ try:
             # Handle vertical lines
             for x in range(min(coord[0], coord[2]), max(coord[0], coord[2])+1):
                 vents[x][coord[1]] += 1
+        else:
+            # Handle the diagnoal
+            x = coord[0]
+            y = coord[1]
+            while x != coord[2] and y != coord[3]:
+                vents[x][y] += 1
+                if x > coord[2]:
+                    x -= 1
+                else:
+                    x += 1
+                if y > coord[3]:
+                    y -= 1
+                else:
+                    y += 1
+            vents[x][y] += 1
     
     # Work out how many vent's overlap at least once
     overlaps = 0
