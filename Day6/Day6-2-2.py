@@ -1,24 +1,7 @@
 # Day6.py - Lanternfish
 
 import array
-
-class Fish:
-    counter = 0
-    def __init__(self, life):
-        self.counter = life
-    
-    def age(self):
-        self.counter -= 1
-        if self.counter < 0:
-            self.counter = 6
-            return Fish(8)
-        return None
-    
-def getAges(fishes):
-    ages = []
-    for fish in fishes:
-        ages.append(fish.counter)
-    return ages
+from datetime import datetime
 
 def fishLifecycle(life, days):
     fishes = array.array('b')
@@ -33,10 +16,15 @@ def fishLifecycle(life, days):
                 children.append(8)
         fishes.extend(children)
     return fishes
-    
+
+def timestamp():
+    now = datetime.now()
+    current_time = now.strftime("%H:%M:%S")
+    print(current_time)
+
 try:
     fishes = None
-    file = open ('test.txt', 'r')
+    file = open ('input.txt', 'r')
     lines = file.readlines()
     
     # Go through each line in the input file
@@ -45,15 +33,13 @@ try:
             fishes = array.array('b')
             for fish in line.split(","):
                 fishes.append(int(fish.strip()))
-                
-    #print(f"Initial state: {getAges(fishes)}")
-                
-    # Work out fish population in 8 days
+    
+    # Work out fish population growth in set period of days
+    period = 64
     populations = {}
     
-    period = 16
-    
-    # Go through each day
+    # Go through each starting fish state working out the lifecycles
+    timestamp()
     print("Working out lifecycles")
     populations[0] = fishLifecycle(0, period)
     populations[1] = fishLifecycle(1, period)
@@ -65,18 +51,41 @@ try:
     populations[7] = fishLifecycle(7, period)
     populations[8] = fishLifecycle(8, period)
     print("Found lifecycles")
+    timestamp()
+    
+    counters = {}
     
     days = 256
-    for i in range(int(days/period)):
-        newfishes = array.array('b')
-        # For each fish work out the population after the period of days
-        for fish in fishes:
-            newfishes.extend(populations[fish])
-        fishes = newfishes
-        print(f"{i*period}/{days} days")
+    for i in range(min(fishes), max(fishes)+1):
+        tmpfishes = array.array('b')
+        tmpfishes.append(i)
+        timestamp()
+        print(f"Working out population for starting fish {i}")
+        for j in range(int(days/period)):
+            newfishes = array.array('b')
+            # For each fish work out the population after the period of days
+            for fish in tmpfishes:
+                newfishes.extend(populations[fish])
+            tmpfishes = newfishes
+            print(f"{j*period}/{days} days")
+        print(f"Fish {i} population {len(tmpfishes)}")
+        print()
+        counters[i] = len(tmpfishes)
+    timestamp()
+    
+    # Hardcoded values to save time processing 256 days all over again
+    #counters[1] = 6206821033
+    #counters[2] = 5617089148
+    #counters[3] = 5217223242
+    #counters[4] = 4726100874
+    #counters[5] = 4368232009
+    
+    total = 0
+    for fish in fishes:
+        total += counters[fish]
     
     # Finally, how many fish are there
-    print(f"After {days} there are {len(fishes)} fish")
+    print(f"After {days} there are {total} fish")
                            
 except Exception as e:
     print("An error occurred")
